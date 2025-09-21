@@ -1,0 +1,103 @@
+/* ---------- Design tokens ---------- */
+:root {
+  --ink: #0b1220;
+  --muted: #44506a;
+  --surface: rgba(255, 255, 255, 0.75);
+  --stroke: rgba(3, 7, 18, 0.08);
+  --shadow: rgba(2, 6, 23, 0.20);
+}
+
+/* ---------- Layout ---------- */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+               Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  /* Distinct, light aesthetic with animated soft gradient */
+  background:
+    radial-gradient(1000px 600px at 15% 10%, rgba(255,255,255,0.75) 0%, transparent 65%),
+    conic-gradient(from 220deg at 80% 20%, #d1f4ff 0deg, #f0d9ff 120deg, #ffe3c2 240deg, #d1f4ff 360deg);
+  background-attachment: fixed;
+}
+
+.relay-wrap {
+  width: 100%;
+  max-width: 520px;
+  padding: 20px;
+}
+
+/* ---------- Card ---------- */
+.handoff-panel {
+  position: relative;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 22px;
+  padding: 30px 28px 26px;
+  box-shadow: 0 18px 40px var(--shadow);
+  border: 1px solid var(--stroke);
+  text-align: center;
+}
+
+.emblem {
+  width: 54px; height: 54px;
+  margin: 0 auto 18px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: #0f172a;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.35)),
+    radial-gradient(120% 120% at 100% 0%, #a5f3fc 0%, transparent 60%),
+    radial-gradient(120% 120% at 0% 100%, #f5d0fe 0%, transparent 60%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin: 4px 0 10px;
+}
+
+#live-status {
+  font-size: 15.5px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.aux-note {
+  min-height: 1.2em;
+  font-size: 13.5px;
+  color: #8b0000;
+}
+
+.noscript {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #1f2937;
+  text-align: center;
+}
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .handoff-panel { animation: pop-in 360ms cubic-bezier(.16,1,.3,1) both; }
+  @keyframes pop-in {
+    from { transform: translateY(6px) scale(.98); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .handoff-panel { padding: 24px 20px; border-radius: 18px; }
+  .emblem { width: 46px; height: 46px; border-radius: 14px; }
+  h1 { font-size: 19px; }
+  #live-status { font-size: 14px; }
+  .aux-note { font-size: 12.5px; }
+}
